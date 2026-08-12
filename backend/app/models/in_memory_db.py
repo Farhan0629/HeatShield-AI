@@ -121,7 +121,11 @@ class InMemoryDB:
         return list(self.facilities.values())
 
     def get_facility(self, facility_id: str) -> Optional[Facility]:
-        return self.facilities.get(facility_id)
+        if facility_id in self.facilities:
+            return self.facilities[facility_id]
+        # Resolve common aliases like fac-001 -> f1, fac-1 -> f1
+        normalized = facility_id.lower().replace("fac-00", "f").replace("fac-0", "f").replace("fac-", "f")
+        return self.facilities.get(normalized)
 
     def create_facility(self, payload: FacilityCreate) -> Facility:
         new_id = f"f{len(self.facilities) + 1}"

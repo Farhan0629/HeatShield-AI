@@ -89,7 +89,10 @@ export const DashboardPage: React.FC<Props> = ({
         facilities={facilities}
         selectedFacilityId={selectedFacility?.id || 'f1'}
         onSelectFacility={onSelectFacility}
-        onNavigateDetails={() => onNavigate('details')}
+        onNavigateDetails={(id) => {
+          onSelectFacility(id);
+          onNavigate('details');
+        }}
       />
     </div>
   );

@@ -1,0 +1,522 @@
+[
+  {
+    "test_id": 1,
+    "name": "GET /api/health",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"status\":\"healthy\",\"service\":\"HeatShield AI Operations API\",\"fortyguard_mode\":\"mock\",\"fortyguard_connected\":false,\"ai_provider\":\"mock\",\"version\":\"1.0.0-prototype\"}"
+  },
+  {
+    "test_id": 2,
+    "name": "GET /api/facilities",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "[{\"name\":\"Kolkata Distribution Warehouse\",\"type\":\"Warehouse\",\"location\":\"Kolkata, West Bengal, India\",\"latitude\":22.5726,\"longitude\":88.3639,\"workers_count\":240,\"operating_hours\":\"06:00 - 22:00 IST\",\"exposure_type\":\"Hybrid (Indoor/Outdoor)\",\"cooling_availability\":\"Partial Evaporative Cooling\",\"id\":\""
+  },
+  {
+    "test_id": 3,
+    "name": "POST /api/facilities (prompt JSON payload)",
+    "http_code": 422,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": [
+      {
+        "type": "string_type",
+        "loc": [
+          "body",
+          "location"
+        ],
+        "msg": "Input should be a valid string",
+        "input": {
+          "lat": 22.5,
+          "lng": 88.3,
+          "address": "Test Address"
+        }
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "latitude"
+        ],
+        "msg": "Field required",
+        "input": {
+          "name": "Test Facility",
+          "type": "warehouse",
+          "location": {
+            "lat": 22.5,
+            "lng": 88.3,
+            "address": "Test Address"
+          },
+          "capacity": 100,
+          "shift_hours": 8
+        }
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "longitude"
+        ],
+        "msg": "Field required",
+        "input": {
+          "name": "Test Facility",
+          "type": "warehouse",
+          "location": {
+            "lat": 22.5,
+            "lng": 88.3,
+            "address": "Test Address"
+          },
+          "capacity": 100,
+          "shift_hours": 8
+        }
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "workers_count"
+        ],
+        "msg": "Field required",
+        "input": {
+          "name": "Test Facility",
+          "type": "warehouse",
+          "location": {
+            "lat": 22.5,
+            "lng": 88.3,
+            "address": "Test Address"
+          },
+          "capacity": 100,
+          "shift_hours": 8
+        }
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "operating_hours"
+        ],
+        "msg": "Field required",
+        "input": {
+          "name": "Test Facility",
+          "type": "warehouse",
+          "location": {
+            "lat": 22.5,
+            "lng": 88.3,
+            "address": "Test Address"
+          },
+          "capacity": 100,
+          "shift_hours": 8
+        }
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "exposure_type"
+        ],
+        "msg": "Field required",
+        "input": {
+          "name": "Test Facility",
+          "type": "warehouse",
+          "location": {
+            "lat": 22.5,
+            "lng": 88.3,
+            "address": "Test Address"
+          },
+          "capacity": 100,
+          "shift_hours": 8
+        }
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "cooling_availability"
+        ],
+        "msg": "Field required",
+        "input": {
+          "name": "Test Facility",
+          "type": "warehouse",
+          "location": {
+            "lat": 22.5,
+            "lng": 88.3,
+            "address": "Test Address"
+          },
+          "capacity": 100,
+          "shift_hours": 8
+        }
+      }
+    ],
+    "body": "{\"detail\":[{\"type\":\"string_type\",\"loc\":[\"body\",\"location\"],\"msg\":\"Input should be a valid string\",\"input\":{\"lat\":22.5,\"lng\":88.3,\"address\":\"Test Address\"}},{\"type\":\"missing\",\"loc\":[\"body\",\"latitude\"],\"msg\":\"Field required\",\"input\":{\"name\":\"Test Facility\",\"type\":\"warehouse\",\"location\":{\"lat\":22.5,\"ln"
+  },
+  {
+    "test_id": 4,
+    "name": "GET /api/heat/current/fac-001",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 5,
+    "name": "GET /api/heat/current/fac-002",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 6,
+    "name": "GET /api/heat/current/fac-003",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 7,
+    "name": "GET /api/heat/current/fac-004",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 8,
+    "name": "GET /api/heat/current/INVALID-ID",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 9,
+    "name": "GET /api/heat/forecast/fac-001?hours=12",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 10,
+    "name": "GET /api/heat/forecast/fac-001",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 11,
+    "name": "GET /api/heat/heatmap/fac-001",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 12,
+    "name": "GET /api/risk/fac-001",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 13,
+    "name": "GET /api/risk/fac-002",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 14,
+    "name": "GET /api/risk/fac-003",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 15,
+    "name": "GET /api/risk/fac-004",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 16,
+    "name": "POST /api/ai/chat",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"reply\":\"I am analyzing live environmental signals for **Kolkata Distribution Warehouse**. Current conditions show **39.4\u00b0C** temperature, **48.2\u00b0C** heat index, and **HIGH** heat risk. How can I assist your operational thermal safety decisions?\",\"facility_id\":\"fac-001\",\"suggested_followups\":[\"Why "
+  },
+  {
+    "test_id": 17,
+    "name": "GET /api/alerts",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "[{\"id\":\"alt-1\",\"facility_id\":\"f1\",\"facility_name\":\"Kolkata Distribution Warehouse\",\"severity\":\"CRITICAL\",\"title\":\"Critical Thermal Stress Threshold Exceeded\",\"message\":\"Apparent heat index reached 48.2\u00b0C with wet bulb temperature of 30.1\u00b0C. Mandatory rest cycles required.\",\"timestamp\":\"2 minutes ago"
+  },
+  {
+    "test_id": 18,
+    "name": "GET /api/alerts?severity=critical",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "[{\"id\":\"alt-1\",\"facility_id\":\"f1\",\"facility_name\":\"Kolkata Distribution Warehouse\",\"severity\":\"CRITICAL\",\"title\":\"Critical Thermal Stress Threshold Exceeded\",\"message\":\"Apparent heat index reached 48.2\u00b0C with wet bulb temperature of 30.1\u00b0C. Mandatory rest cycles required.\",\"timestamp\":\"2 minutes ago"
+  },
+  {
+    "test_id": 19,
+    "name": "POST /api/reports/generate (prompt payload)",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 20,
+    "name": "POST /api/reports/pdf (prompt payload)",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Facility not found",
+    "body": "{\"detail\":\"Facility not found\"}"
+  },
+  {
+    "test_id": 21,
+    "name": "GET / (Root API info)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"message\":\"HeatShield AI Operations API is active.\",\"fortyguard_mode\":\"mock\",\"docs_url\":\"/docs\"}"
+  },
+  {
+    "test_id": 22,
+    "name": "POST /api/facilities (Valid Pydantic Schema)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"name\":\"Test Warehouse\",\"type\":\"Warehouse\",\"location\":\"Kolkata, West Bengal\",\"latitude\":22.5726,\"longitude\":88.3639,\"workers_count\":100,\"operating_hours\":\"08:00 - 18:00 IST\",\"exposure_type\":\"Indoor\",\"cooling_availability\":\"Full AC\",\"id\":\"f5\",\"risk_score\":45.0,\"risk_level\":\"MODERATE\",\"current_temper"
+  },
+  {
+    "test_id": 23,
+    "name": "GET /api/heat/current/f1 (Valid DB facility ID f1)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"facility_id\":\"f1\",\"timestamp\":\"2026-08-12T16:25:30.068553+00:00\",\"temperature\":39.4,\"heat_index\":48.2,\"humidity\":72.0,\"wet_bulb\":30.1,\"aqi\":164,\"solar_irradiance\":850.0,\"wind_speed\":11.2,\"is_demo_data\":true}"
+  },
+  {
+    "test_id": 24,
+    "name": "GET /api/heat/forecast/f1?hours=12 (Valid DB facility ID f1)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"facility_id\":\"f1\",\"generated_at\":\"2026-08-12T16:25:30.340128+00:00\",\"forecast_hours\":12,\"hourly\":[{\"time\":\"08:00\",\"temperature\":35.4,\"heat_index\":43.2,\"humidity\":87.0,\"wet_bulb\":27.6,\"risk_score\":69.4,\"risk_level\":\"HIGH\",\"is_peak\":true},{\"time\":\"09:00\",\"temperature\":36.3,\"heat_index\":44.3,\"humidit"
+  },
+  {
+    "test_id": 25,
+    "name": "GET /api/heat/heatmap/f1 (Valid DB facility ID f1)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"facility_id\":\"f1\",\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\",\"properties\":{\"zone\":\"Critical Thermal Core\",\"temp_c\":41.2,\"risk_level\":\"CRITICAL\",\"fill\":\"#ef4444\",\"fillOpacity\":0.45,\"stroke\":\"#b91c1c\"},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[[88.3559,22.564600000000002],[88.3719,2"
+  },
+  {
+    "test_id": 26,
+    "name": "GET /api/risk/f1 (Valid DB facility ID f1)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"facility_id\":\"f1\",\"score\":76.6,\"level\":\"HIGH\",\"headline\":\"ELEVATED THERMAL STRESS RISK\",\"summary\":\"Current environmental conditions at this warehouse indicate high thermal stress. High temperature (39.4\u00b0C) combined with heat index (48.2\u00b0C) and wet bulb (30.1\u00b0C) substantially increases worker physi"
+  },
+  {
+    "test_id": 27,
+    "name": "POST /api/reports/generate (Valid DB facility ID f1)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"id\":\"REP-FCC680BF\",\"facility_id\":\"f1\",\"facility_name\":\"Kolkata Distribution Warehouse\",\"report_type\":\"incident\",\"title\":\"incident - Kolkata Distribution Warehouse\",\"generated_at\":\"2026-08-12 16:25:31 UTC\",\"risk_level\":\"HIGH\",\"risk_score\":75.6,\"summary\":\"Official operational heat incident report ge"
+  },
+  {
+    "test_id": 28,
+    "name": "POST /api/reports/pdf (Valid DB facility ID f1)",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "PDF Binary Stream",
+    "error_detail": null,
+    "body": "<Binary PDF Document - 1889 bytes>"
+  },
+  {
+    "test_id": 29,
+    "name": "POST /api/alerts/alt-1/acknowledge",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"id\":\"alt-1\",\"facility_id\":\"f1\",\"facility_name\":\"Kolkata Distribution Warehouse\",\"severity\":\"CRITICAL\",\"title\":\"Critical Thermal Stress Threshold Exceeded\",\"message\":\"Apparent heat index reached 48.2\u00b0C with wet bulb temperature of 30.1\u00b0C. Mandatory rest cycles required.\",\"timestamp\":\"2 minutes ago\""
+  },
+  {
+    "test_id": 30,
+    "name": "POST /api/alerts/alt-1/resolve",
+    "http_code": 200,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": null,
+    "body": "{\"id\":\"alt-1\",\"facility_id\":\"f1\",\"facility_name\":\"Kolkata Distribution Warehouse\",\"severity\":\"CRITICAL\",\"title\":\"Critical Thermal Stress Threshold Exceeded\",\"message\":\"Apparent heat index reached 48.2\u00b0C with wet bulb temperature of 30.1\u00b0C. Mandatory rest cycles required.\",\"timestamp\":\"2 minutes ago\""
+  },
+  {
+    "test_id": 31,
+    "name": "Edge: POST /api/facilities (empty body {})",
+    "http_code": 422,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": [
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "name"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "type"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "location"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "latitude"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "longitude"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "workers_count"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "operating_hours"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "exposure_type"
+        ],
+        "msg": "Field required",
+        "input": {}
+      },
+      {
+        "type": "missing",
+        "loc": [
+          "body",
+          "cooling_availability"
+        ],
+        "msg": "Field required",
+        "input": {}
+      }
+    ],
+    "body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"name\"],\"msg\":\"Field required\",\"input\":{}},{\"type\":\"missing\",\"loc\":[\"body\",\"type\"],\"msg\":\"Field required\",\"input\":{}},{\"type\":\"missing\",\"loc\":[\"body\",\"location\"],\"msg\":\"Field required\",\"input\":{}},{\"type\":\"missing\",\"loc\":[\"body\",\"latitude\"],\"msg\":\"Field req"
+  },
+  {
+    "test_id": 32,
+    "name": "Edge: GET /api/heat/forecast/f1?hours=50 (hours > 24 validation limit)",
+    "http_code": 422,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": [
+      {
+        "type": "less_than_equal",
+        "loc": [
+          "query",
+          "hours"
+        ],
+        "msg": "Input should be less than or equal to 24",
+        "input": "50",
+        "ctx": {
+          "le": 24
+        }
+      }
+    ],
+    "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"query\",\"hours\"],\"msg\":\"Input should be less than or equal to 24\",\"input\":\"50\",\"ctx\":{\"le\":24}}]}"
+  },
+  {
+    "test_id": 33,
+    "name": "Edge: GET /api/nonexistent_endpoint (404 route test)",
+    "http_code": 404,
+    "is_valid": true,
+    "format": "JSON",
+    "error_detail": "Not Found",
+    "body": "{\"detail\":\"Not Found\"}"
+  }
+]
