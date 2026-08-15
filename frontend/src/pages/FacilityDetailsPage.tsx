@@ -5,6 +5,11 @@ import type { EnvironmentalMetrics, HeatForecastResponse } from '../types/heat';
 import type { RiskAssessment } from '../types/risk';
 import type { Alert } from '../types/alert';
 import { RiskBadge } from '../components/common/Badge';
+import { DataSourceBadge } from '../components/common/DataSourceBadge';
+import { OverallRiskCard } from '../components/dashboard/OverallRiskCard';
+import { WhyThisRisk } from '../components/risk/WhyThisRisk';
+import { ActionRecommendationsCard } from '../components/risk/ActionRecommendationsCard';
+import { OperationalImpactMatrix } from '../components/risk/OperationalImpactMatrix';
 import { EnvironmentalMetricsGrid } from '../components/dashboard/EnvironmentalMetricsGrid';
 import { RiskTrendChart } from '../components/dashboard/RiskTrendChart';
 
@@ -39,11 +44,12 @@ export const FacilityDetailsPage: React.FC<Props> = ({
               <Building2 className="w-6 h-6" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2.5">
                 <h2 className="text-xl font-extrabold text-white">{facility.name}</h2>
                 <RiskBadge level={facility.risk_level}>{facility.risk_level}</RiskBadge>
+                <DataSourceBadge mode="mock" className="hidden sm:inline-flex" />
               </div>
-              <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+              <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5 font-mono">
                 <MapPin className="w-3.5 h-3.5 text-gray-400" />
                 {facility.location} (Lat: {facility.latitude}, Lng: {facility.longitude})
               </p>
@@ -57,14 +63,14 @@ export const FacilityDetailsPage: React.FC<Props> = ({
             className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors shadow-md flex items-center gap-1.5"
           >
             <Bot className="w-4 h-4" />
-            Ask HeatShield
+            Ask Decision Assistant
           </button>
           <button
             onClick={() => onNavigate('reports')}
             className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition-colors shadow-md flex items-center gap-1.5"
           >
             <FileText className="w-4 h-4" />
-            Generate Incident Report
+            Executive Report
           </button>
         </div>
       </div>
@@ -104,54 +110,71 @@ export const FacilityDetailsPage: React.FC<Props> = ({
         </div>
       </div>
 
+      {/* Operational Risk & Forecast Projection */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-5">
+          <OverallRiskCard
+            assessment={assessment}
+            facilityName={facility.name}
+          />
+        </div>
+
+        <div className="lg:col-span-7">
+          <RiskTrendChart forecast={forecast} />
+        </div>
+      </div>
+
+      {/* Why This Risk? Intelligence */}
+      <WhyThisRisk
+        assessment={assessment}
+        facilityName={facility.name}
+      />
+
+      {/* Actionable Recommendations */}
+      <ActionRecommendationsCard
+        recommendations={assessment?.structured_recommendations || []}
+        facilityName={facility.name}
+      />
+
+      {/* Operational Impact Matrix */}
+      <OperationalImpactMatrix
+        impact={assessment?.operational_impact}
+      />
+
       {/* Environmental Metrics */}
-      <EnvironmentalMetricsGrid metrics={metrics} />
+      <div>
+        <h3 className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-3">
+          FortyGuard Atmospheric & Micro-Climate Telemetry
+        </h3>
+        <EnvironmentalMetricsGrid metrics={metrics} />
+      </div>
 
-      {/* Risk Trend Chart */}
-      <RiskTrendChart forecast={forecast} />
-
-      {/* Recommended Actions & Facility Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recommended Actions */}
-        <div className="glass-panel p-6 rounded-2xl shadow-xl space-y-4">
-          <h3 className="text-xs font-mono uppercase tracking-widest text-emerald-400 font-semibold flex items-center gap-2">
-            Recommended Operational Actions
-          </h3>
-          <ul className="space-y-3 text-xs text-gray-300">
-            {assessment?.recommended_actions.map((act, idx) => (
-              <li key={idx} className="p-3 rounded-xl bg-surface-muted/60 border border-gray-800 flex items-start gap-2.5">
-                <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center text-[10px] flex-shrink-0">
-                  {idx + 1}
-                </span>
-                <span className="leading-relaxed text-gray-200">{act}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Facility Alerts */}
-        <div className="glass-panel p-6 rounded-2xl shadow-xl space-y-4">
-          <h3 className="text-xs font-mono uppercase tracking-widest text-amber-400 font-semibold flex items-center gap-2">
-            Recent Facility Alerts ({facilityAlerts.length})
-          </h3>
-          {facilityAlerts.length === 0 ? (
-            <p className="text-xs text-gray-500 font-mono py-8 text-center">No active alerts for this facility.</p>
-          ) : (
-            <div className="space-y-3">
-              {facilityAlerts.map((alt) => (
-                <div key={alt.id} className="p-3.5 rounded-xl bg-surface-muted/80 border border-gray-800 text-xs">
-                  <div className="flex items-center justify-between">
-                    <RiskBadge level={alt.severity}>{alt.severity}</RiskBadge>
-                    <span className="text-[10px] font-mono text-gray-500">{alt.timestamp}</span>
-                  </div>
-                  <h4 className="font-bold text-gray-200 mt-2">{alt.title}</h4>
-                  <p className="text-gray-400 mt-1">{alt.message}</p>
+      {/* Facility Alerts */}
+      <div className="glass-panel p-6 rounded-2xl shadow-xl space-y-4">
+        <h3 className="text-xs font-mono uppercase tracking-widest text-amber-400 font-semibold flex items-center gap-2">
+          Facility Alerts Log ({facilityAlerts.length})
+        </h3>
+        {facilityAlerts.length === 0 ? (
+          <p className="text-xs text-gray-500 font-mono py-8 text-center">No active alerts for this facility.</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {facilityAlerts.map((alt) => (
+              <div key={alt.id} className="p-4 rounded-xl bg-surface-muted/80 border border-gray-800 text-xs space-y-2">
+                <div className="flex items-center justify-between">
+                  <RiskBadge level={alt.severity}>{alt.severity}</RiskBadge>
+                  <span className="text-[10px] font-mono text-gray-400">{alt.timestamp}</span>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                <h4 className="font-bold text-gray-100">{alt.title}</h4>
+                <p className="text-gray-300">{alt.message}</p>
+                <div className="p-2.5 rounded-lg bg-surface-DEFAULT border border-gray-800 text-[11px] text-emerald-300">
+                  <strong>Recommended:</strong> {alt.recommended_action}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
+

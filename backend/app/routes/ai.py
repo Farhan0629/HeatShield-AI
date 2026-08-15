@@ -43,6 +43,7 @@ async def ai_chat(request: AIChatRequest):
         "risk_score": risk.score,
         "risk_level": risk.level,
         "peak_time": forecast.peak_time,
+        "threshold_exceedance_hours": risk.threshold_exceedance_hours,
         "operating_hours": facility.operating_hours
     }
 

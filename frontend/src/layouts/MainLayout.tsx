@@ -13,7 +13,7 @@ import {
   User,
   Activity
 } from 'lucide-react';
-import { DemoModeBadge } from '../components/common/Badge';
+import { DataSourceBadge } from '../components/common/DataSourceBadge';
 import { BackendOfflineBanner } from '../components/common/BackendOfflineBanner';
 import type { Facility } from '../types/facility';
 
@@ -44,14 +44,14 @@ export const MainLayout: React.FC<Props> = ({
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, tier: 'Tier 1' },
-    { id: 'facilities', label: 'Facilities', icon: Building2, tier: 'Tier 2' },
-    { id: 'details', label: 'Facility Details', icon: MapPin, tier: 'Tier 1' },
-    { id: 'map', label: 'Thermal Map', icon: Activity, tier: 'Tier 1' },
-    { id: 'risk', label: 'Risk Analysis', icon: Sliders, tier: 'Tier 1' },
-    { id: 'ai', label: 'AI Operations Assistant', icon: Bot, tier: 'Tier 1' },
-    { id: 'alerts', label: 'Alerts', icon: Bell, badge: unreadAlertsCount, tier: 'Tier 2' },
-    { id: 'reports', label: 'Reports', icon: FileText, tier: 'Tier 2' },
-    { id: 'settings', label: 'Settings', icon: Settings, tier: 'Tier 3' },
+    { id: 'facilities', label: 'Facility Inventory', icon: Building2, tier: 'Tier 2' },
+    { id: 'details', label: 'Facility Deep Dive', icon: MapPin, tier: 'Tier 1' },
+    { id: 'map', label: 'Micro-Climate Map', icon: Activity, tier: 'Tier 1' },
+    { id: 'risk', label: 'Risk Engine Audit', icon: Sliders, tier: 'Tier 1' },
+    { id: 'ai', label: 'Decision Assistant', icon: Bot, tier: 'Tier 1' },
+    { id: 'alerts', label: 'Alerts Registry', icon: Bell, badge: unreadAlertsCount, tier: 'Tier 2' },
+    { id: 'reports', label: 'Executive Reports', icon: FileText, tier: 'Tier 2' },
+    { id: 'settings', label: 'System Settings', icon: Settings, tier: 'Tier 3' },
   ];
 
   return (
@@ -68,13 +68,13 @@ export const MainLayout: React.FC<Props> = ({
                 HEATSHIELD <span className="text-indigo-400">AI</span>
               </h1>
               <p className="text-[10px] font-mono text-gray-400 tracking-wider uppercase mt-0.5">
-                Enterprise Heat Risk Intelligence
+                Enterprise Heat Risk Intelligence & Decision Support
               </p>
             </div>
           </div>
 
-          <div className="hidden md:block">
-            <DemoModeBadge mode="mock" />
+          <div className="hidden xl:block">
+            <DataSourceBadge mode="mock" />
           </div>
         </div>
 
@@ -163,10 +163,14 @@ export const MainLayout: React.FC<Props> = ({
               <span>Active Context</span>
               <span className="text-emerald-400">● Realtime</span>
             </div>
-            <div className="font-semibold text-gray-200 truncate">{currentFacility?.name}</div>
+            <div className="font-bold text-gray-100 truncate">{currentFacility?.name}</div>
             <div className="text-[11px] text-gray-400 flex items-center justify-between">
-              <span>Heat Index:</span>
-              <span className="font-mono text-amber-400 font-bold">{currentFacility?.current_temperature + 8.8}°C</span>
+              <span>Risk Rating:</span>
+              <span className="font-mono font-bold text-amber-400">{currentFacility?.risk_level} ({currentFacility?.risk_score?.toFixed(0)}/100)</span>
+            </div>
+            <div className="text-[11px] text-gray-400 flex items-center justify-between">
+              <span>Ambient Temp:</span>
+              <span className="font-mono text-gray-200">{currentFacility?.current_temperature}°C</span>
             </div>
           </div>
         </aside>

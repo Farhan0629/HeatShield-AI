@@ -4,41 +4,41 @@ from app.services.providers.base import TemperatureDataProvider
 from app.schemas.heat import EnvironmentalMetrics, HeatForecastResponse, HourlyForecastPoint, HeatmapGeoJSONResponse
 
 FACILITY_MOCK_ENV: Dict[str, Dict[str, Any]] = {
-    "f1": { # Kolkata Distribution Warehouse
-        "temperature": 39.4,
-        "heat_index": 48.2,
-        "humidity": 72.0,
-        "wet_bulb": 30.1,
-        "aqi": 164,
-        "solar_irradiance": 850.0,
-        "wind_speed": 11.2,
+    "f1": { # Phoenix Logistics Center
+        "temperature": 42.8,
+        "heat_index": 46.5,
+        "humidity": 24.0,
+        "wet_bulb": 26.2,
+        "aqi": 115,
+        "solar_irradiance": 960.0,
+        "wind_speed": 10.5,
     },
-    "f2": { # Delhi Construction Site
-        "temperature": 42.1,
-        "heat_index": 51.5,
+    "f2": { # Dallas Construction Hub
+        "temperature": 39.6,
+        "heat_index": 47.2,
+        "humidity": 62.0,
+        "wet_bulb": 30.2,
+        "aqi": 132,
+        "solar_irradiance": 910.0,
+        "wind_speed": 9.0,
+    },
+    "f3": { # Austin Operations Campus
+        "temperature": 34.2,
+        "heat_index": 39.8,
+        "humidity": 54.0,
+        "wet_bulb": 26.0,
+        "aqi": 68,
+        "solar_irradiance": 820.0,
+        "wind_speed": 14.2,
+    },
+    "f4": { # Seattle Regional Fulfillment
+        "temperature": 24.5,
+        "heat_index": 25.2,
         "humidity": 58.0,
-        "wet_bulb": 31.5,
-        "aqi": 210,
-        "solar_irradiance": 920.0,
-        "wind_speed": 8.5,
-    },
-    "f3": { # Mumbai Office Campus
-        "temperature": 33.5,
-        "heat_index": 41.0,
-        "humidity": 82.0,
-        "wet_bulb": 28.2,
-        "aqi": 118,
-        "solar_irradiance": 740.0,
-        "wind_speed": 16.0,
-    },
-    "f4": { # Bengaluru Manufacturing Unit
-        "temperature": 31.0,
-        "heat_index": 34.2,
-        "humidity": 64.0,
-        "wet_bulb": 24.5,
-        "aqi": 82,
-        "solar_irradiance": 810.0,
-        "wind_speed": 14.5,
+        "wet_bulb": 18.5,
+        "aqi": 42,
+        "solar_irradiance": 620.0,
+        "wind_speed": 18.0,
     }
 }
 

@@ -15,12 +15,12 @@ interface Props {
 }
 
 const SUGGESTED_QUESTIONS = [
-  "Why is the current risk critical?",
-  "What should we do right now?",
-  "When is the safest operating period?",
-  "Should outdoor operations be reduced?",
-  "Generate an incident summary.",
-  "Explain today's heat trend."
+  "Which facility is currently at greatest heat risk?",
+  "Why is this facility at elevated risk?",
+  "What actions should we take right now?",
+  "When is the peak thermal period expected?",
+  "Summarize today's heat situation across all facilities.",
+  "What is the operational impact on cooling and workforce?"
 ];
 
 export const ChatWindow: React.FC<Props> = ({
