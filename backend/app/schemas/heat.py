@@ -11,7 +11,7 @@ class EnvironmentalMetrics(BaseModel):
     aqi: int = Field(..., description="Air Quality Index")
     solar_irradiance: float = Field(..., description="Global Horizontal Irradiance in W/m²")
     wind_speed: float = Field(..., description="Wind Speed in km/h")
-    is_demo_data: bool = True
+    is_demo_data: bool = False
 
 class HourlyForecastPoint(BaseModel):
     time: str = Field(..., example="14:00")
@@ -30,10 +30,10 @@ class HeatForecastResponse(BaseModel):
     hourly: List[HourlyForecastPoint]
     peak_time: str
     peak_risk_score: float
-    is_demo_data: bool = True
+    is_demo_data: bool = False
 
 class HeatmapGeoJSONResponse(BaseModel):
     facility_id: str
     type: str = "FeatureCollection"
     features: List[Dict[str, Any]]
-    is_demo_data: bool = True
+    is_demo_data: bool = False

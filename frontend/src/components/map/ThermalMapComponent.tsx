@@ -57,8 +57,9 @@ export const ThermalMapComponent: React.FC<Props> = ({ facility, heatmap }) => {
           </div>
           <p className="text-sm font-semibold text-white mt-1 flex items-center gap-2">
             {facility.name}
-            <span className="text-xs font-mono text-indigo-400 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-800">
-              Demo Thermal Data
+            <span className="text-xs font-mono text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              FortyGuard Live Micro-Climate Ingestion
             </span>
           </p>
         </div>

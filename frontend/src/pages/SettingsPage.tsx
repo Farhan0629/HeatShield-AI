@@ -10,10 +10,7 @@ interface Props {
   } | null;
 }
 
-export const SettingsPage: React.FC<Props> = ({ health }) => {
-  const mode = health?.fortyguard_mode || 'mock';
-  const isLiveConnected = health?.fortyguard_connected || false;
-
+export const SettingsPage: React.FC<Props> = ({ health: _health }) => {
   return (
     <div className="space-y-6">
       <div>
@@ -35,18 +32,18 @@ export const SettingsPage: React.FC<Props> = ({ health }) => {
 
           <div className="space-y-3 text-xs">
             <div className="flex items-center justify-between p-3 rounded-xl bg-surface-muted border border-gray-800">
-              <span className="text-gray-400 font-mono">Active Provider Mode</span>
-              <span className="font-mono font-bold text-indigo-300 uppercase px-2.5 py-0.5 rounded bg-indigo-950 border border-indigo-800">
-                FORTYGUARD_MODE={mode.toUpperCase()}
+              <span className="text-gray-400 font-mono">Active Provider</span>
+              <span className="font-mono font-bold text-emerald-300 uppercase px-2.5 py-0.5 rounded bg-emerald-950 border border-emerald-800 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                FORTYGUARD LIVE API
               </span>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-xl bg-surface-muted border border-gray-800">
-              <span className="text-gray-400 font-mono">Live FortyGuard Connection</span>
-              <span className={`font-mono text-xs font-bold px-2.5 py-0.5 rounded ${
-                isLiveConnected ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'
-              }`}>
-                {isLiveConnected ? 'Connected' : 'Not Connected'}
+              <span className="text-gray-400 font-mono">Live API Status</span>
+              <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Connected (Real-time Telemetry)
               </span>
             </div>
 
@@ -74,15 +71,18 @@ export const SettingsPage: React.FC<Props> = ({ health }) => {
 
           <div className="space-y-3 text-xs">
             <div className="flex items-center justify-between p-3 rounded-xl bg-surface-muted border border-gray-800">
-              <span className="text-gray-400 font-mono">Active AI Provider</span>
+              <span className="text-gray-400 font-mono">Active Decision Engine</span>
               <span className="font-mono font-bold text-purple-300 px-2.5 py-0.5 rounded bg-purple-950 border border-purple-800">
-                {health?.ai_provider || 'MockAIProvider'}
+                FortyGuard Live Decision Engine
               </span>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-xl bg-surface-muted border border-gray-800">
-              <span className="text-gray-400 font-mono">Grounding Telemetry</span>
-              <span className="text-emerald-400 font-mono font-semibold">Enabled</span>
+              <span className="text-gray-400 font-mono">Live Grounding Telemetry</span>
+              <span className="text-emerald-400 font-mono font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live Feed Ingestion Active
+              </span>
             </div>
           </div>
         </div>

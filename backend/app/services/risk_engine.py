@@ -40,7 +40,8 @@ def calculate_heat_risk(
     humidity: float,
     wet_bulb: float,
     exposure_duration_hours: float = 4.5,
-    facility_type: str = "Warehouse"
+    facility_type: str = "Warehouse",
+    is_demo_data: bool = True
 ) -> RiskAssessment:
     # 1. Temperature Burden (Baseline 28°C to Max 45°C) -> 0..100
     temp_score = min(100.0, max(0.0, ((temperature - 28.0) / 17.0) * 100.0))
@@ -331,6 +332,6 @@ def calculate_heat_risk(
         structured_recommendations=structured_recommendations,
         operational_impact=operational_impact,
         model_version="HeatShield Risk Model — Enterprise v1.2",
-        is_demo_data=True
+        is_demo_data=is_demo_data
     )
 

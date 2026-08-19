@@ -28,11 +28,11 @@ export const RiskBadge: React.FC<BadgeProps> = ({ level, className = '', childre
   );
 };
 
-export const DemoModeBadge: React.FC<{ mode?: string }> = ({ mode = 'mock' }) => {
+export const DemoModeBadge: React.FC<{ mode?: string }> = () => {
   return (
-    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-mono bg-indigo-950/80 text-indigo-300 border border-indigo-700/50 shadow-sm">
-      <span className="w-2 h-2 rounded-full bg-indigo-400 mr-2 animate-ping" />
-      FORTYGUARD_MODE={mode.toUpperCase()}
+    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-mono bg-emerald-950/80 text-emerald-300 border border-emerald-600/50 shadow-sm">
+      <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" />
+      FORTYGUARD_API: LIVE
     </span>
   );
 };

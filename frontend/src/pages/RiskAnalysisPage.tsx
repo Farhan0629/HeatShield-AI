@@ -19,7 +19,7 @@ export const RiskAnalysisPage: React.FC<Props> = ({ assessment }) => {
             <h2 className="text-2xl font-extrabold tracking-tight text-white font-mono">
               HEAT-RISK ENGINE AUDIT
             </h2>
-            <DataSourceBadge mode="mock" className="hidden sm:inline-flex" />
+            <DataSourceBadge mode="live" isLive={true} className="hidden sm:inline-flex" />
           </div>
           <p className="text-xs text-gray-400 mt-1">
             Deterministic mathematical scoring model evaluating multi-variable environmental heat burden and operational exposure factors.

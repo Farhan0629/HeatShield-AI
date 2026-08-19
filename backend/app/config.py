@@ -3,11 +3,14 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 
 class Settings(BaseSettings):
-    FORTYGUARD_MODE: str = "mock"
+    FORTYGUARD_MODE: str = "live"
     FORTYGUARD_API_KEY: str = ""
     FORTYGUARD_BASE_URL: str = "https://api.fortyguard.com/v1"
+    FORTYGUARD_POLL_INTERVAL_SECONDS: float = 2.0
+    FORTYGUARD_POLL_TIMEOUT_SECONDS: int = 120
+    FORTYGUARD_CACHE_TTL_SECONDS: int = 300  # 5 min cache
     
-    AI_PROVIDER: str = "mock"
+    AI_PROVIDER: str = "live"
     AI_API_KEY: str = ""
     
     HOST: str = "0.0.0.0"

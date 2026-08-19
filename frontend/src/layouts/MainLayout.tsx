@@ -26,6 +26,8 @@ interface Props {
   isBackendOffline: boolean;
   onRetryBackend: () => void;
   unreadAlertsCount: number;
+  fortyguardMode?: string;
+  isLive?: boolean;
   children: React.ReactNode;
 }
 
@@ -38,6 +40,8 @@ export const MainLayout: React.FC<Props> = ({
   isBackendOffline,
   onRetryBackend,
   unreadAlertsCount,
+  fortyguardMode = 'live',
+  isLive = true,
   children
 }) => {
   const currentFacility = facilities.find(f => f.id === selectedFacilityId) || facilities[0];
@@ -74,7 +78,7 @@ export const MainLayout: React.FC<Props> = ({
           </div>
 
           <div className="hidden xl:block">
-            <DataSourceBadge mode="mock" />
+            <DataSourceBadge mode={fortyguardMode} isLive={isLive} />
           </div>
         </div>
 

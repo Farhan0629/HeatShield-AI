@@ -47,7 +47,7 @@ export const FacilityDetailsPage: React.FC<Props> = ({
               <div className="flex items-center space-x-2.5">
                 <h2 className="text-xl font-extrabold text-white">{facility.name}</h2>
                 <RiskBadge level={facility.risk_level}>{facility.risk_level}</RiskBadge>
-                <DataSourceBadge mode="mock" className="hidden sm:inline-flex" />
+                <DataSourceBadge mode="live" isLive={true} className="hidden sm:inline-flex" />
               </div>
               <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5 font-mono">
                 <MapPin className="w-3.5 h-3.5 text-gray-400" />

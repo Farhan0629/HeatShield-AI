@@ -1,0 +1,134 @@
+"""
+Test all HeatShield FastAPI endpoints in FORTYGUARD_MODE=live
+Verifies live FortyGuard API integration end-to-end with real API key.
+"""
+
+import os
+from dotenv import load_dotenv
+
+# Set live mode before importing app
+os.environ["FORTYGUARD_MODE"] = "live"
+
+from fastapi.testclient import TestClient
+from app.config import settings
+from app.main import app
+
+# Verify config has live mode
+settings.FORTYGUARD_MODE = "live"
+
+client = TestClient(app)
+
+def test_live_suite():
+    print(f"\n{'='*60}")
+    print(f"  HEATSHIELD AI — LIVE FORTYGUARD END-TO-END TEST SUITE")
+    print(f"{'='*60}")
+    print(f"Mode: {settings.FORTYGUARD_MODE}")
+    print(f"API Key: {settings.FORTYGUARD_API_KEY[:6]}...{settings.FORTYGUARD_API_KEY[-4:]}")
+
+    # 1. Health
+    res = client.get("/api/health")
+    print(f"\n1. GET /api/health -> {res.status_code}: {res.json()}")
+    assert res.status_code == 200
+    assert res.json()["fortyguard_mode"] == "live"
+    assert res.json()["fortyguard_connected"] is True
+
+    # 2. Facilities
+    res = client.get("/api/facilities")
+    facilities = res.json()
+    print(f"\n2. GET /api/facilities -> Count: {len(facilities)}")
+    for f in facilities:
+        print(f"   - [{f['id']}] {f['name']} ({f['location']}): ({f['latitude']}, {f['longitude']})")
+    assert len(facilities) == 4
+
+    # Select Dallas (f2)
+    dallas_id = "f2"
+
+    # 3. Live Environmental Conditions (POST /v1/env_params -> GET /v1/status/{id})
+    print(f"\n3. Testing Live Current Conditions for Dallas ({dallas_id})...")
+    res_curr = client.get(f"/api/heat/current/{dallas_id}")
+    print(f"   Status: {res_curr.status_code}")
+    curr_data = res_curr.json()
+    print(f"   Air Temp: {curr_data.get('temperature')}°C")
+    print(f"   Heat Index: {curr_data.get('heat_index')}°C")
+    print(f"   Humidity: {curr_data.get('humidity')}%")
+    print(f"   Wet Bulb: {curr_data.get('wet_bulb')}°C")
+    print(f"   AQI: {curr_data.get('aqi')}")
+    print(f"   Solar Irradiance: {curr_data.get('solar_irradiance')} W/m²")
+    print(f"   Live FortyGuard Provenance: is_demo_data={curr_data.get('is_demo_data')} (False = Live FortyGuard)")
+    assert res_curr.status_code == 200
+    assert curr_data.get("is_demo_data") is False
+
+    # 4. Live-Grounded 12-Hour Forecast
+    print(f"\n4. Testing Live Forecast for Dallas ({dallas_id})...")
+    res_fc = client.get(f"/api/heat/forecast/{dallas_id}?hours=12")
+    fc_data = res_fc.json()
+    print(f"   Hourly Points: {len(fc_data.get('hourly', []))}")
+    print(f"   Peak Time: {fc_data.get('peak_time')}")
+    print(f"   Peak Risk Score: {fc_data.get('peak_risk_score')}")
+    assert res_fc.status_code == 200
+    assert len(fc_data.get("hourly", [])) == 12
+
+    # 5. Live Satellite Micro-Climate Heatmap (POST /v1/heatmap -> GET /v1/status/{id})
+    print(f"\n5. Testing Live Heatmap for Dallas ({dallas_id})...")
+    res_hm = client.get(f"/api/heat/heatmap/{dallas_id}")
+    hm_data = res_hm.json()
+    features = hm_data.get("features", [])
+    print(f"   Heatmap Features: {len(features)} tiles")
+    print(f"   is_demo_data: {hm_data.get('is_demo_data')}")
+    if features:
+        print(f"   Sample Tile: Zone='{features[0]['properties']['zone']}', Temp={features[0]['properties']['temp_c']}°C, Level={features[0]['properties']['risk_level']}")
+    assert res_hm.status_code == 200
+    assert len(features) > 0
+    assert hm_data.get("is_demo_data") is False
+
+    # 6. Deterministic Risk Engine on Live FortyGuard Telemetry
+    print(f"\n6. Testing Risk Engine on Live Dallas Telemetry...")
+    res_risk = client.get(f"/api/risk/{dallas_id}")
+    risk_data = res_risk.json()
+    print(f"   Risk Score: {risk_data.get('score')} / 100")
+    print(f"   Risk Level: {risk_data.get('level')}")
+    print(f"   Headline: {risk_data.get('headline')}")
+    print(f"   Threshold Exceedance: {risk_data.get('threshold_exceedance_hours')} hours")
+    print(f"   Model: {risk_data.get('model_version')}")
+    print(f"   Provenance: is_demo_data={risk_data.get('is_demo_data')} (False = Live FortyGuard)")
+    assert res_risk.status_code == 200
+    assert risk_data.get("is_demo_data") is False
+
+    # 7. AI Decision Assistant with Live Facility Context
+    print(f"\n7. Testing AI Decision Assistant with Live Dallas Context...")
+    res_ai = client.post("/api/ai/chat", json={
+        "facility_id": dallas_id,
+        "message": "What is the primary operational heat risk right now?"
+    })
+    ai_data = res_ai.json()
+    print(f"   Reply Preview: {ai_data.get('reply')[:180]}...")
+    assert res_ai.status_code == 200
+
+    # 8. Reports Generation with Live FortyGuard Provenance
+    print(f"\n8. Testing Executive Reports with Live FortyGuard Telemetry...")
+    res_rep = client.post("/api/reports/generate", json={
+        "facility_id": dallas_id,
+        "report_type": "Incident Report"
+    })
+    rep_data = res_rep.json()
+    print(f"   Report ID: {rep_data.get('id')}")
+    print(f"   Generated By: {rep_data.get('generated_by')}")
+    print(f"   Data Source: {rep_data.get('environmental_snapshot', {}).get('data_source')}")
+    assert "FortyGuard Live Enterprise API" in rep_data.get("generated_by", "")
+    assert rep_data.get("environmental_snapshot", {}).get("data_source") == "FortyGuard Live Enterprise API"
+
+    # 9. PDF Report Generation
+    res_pdf = client.post("/api/reports/pdf", json={
+        "facility_id": dallas_id,
+        "report_type": "Incident Report"
+    })
+    print(f"   PDF Export Size: {len(res_pdf.content)} bytes")
+    assert res_pdf.status_code == 200
+    assert len(res_pdf.content) > 1000
+
+    print(f"\n{'='*60}")
+    print(f"  [ALL LIVE INTEGRATION TESTS PASSED 100% SUCCESSFULLY]")
+    print(f"{'='*60}\n")
+
+if __name__ == "__main__":
+    test_live_suite()

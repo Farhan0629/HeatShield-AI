@@ -209,6 +209,8 @@ export function App() {
       isBackendOffline={isBackendOffline}
       onRetryBackend={fetchInitialData}
       unreadAlertsCount={unreadAlertsCount}
+      fortyguardMode={health?.fortyguard_mode}
+      isLive={metrics ? !metrics.is_demo_data : (health?.fortyguard_mode === 'live')}
     >
       {activeTab === 'dashboard' && (
         <DashboardPage

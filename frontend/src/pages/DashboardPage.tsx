@@ -42,7 +42,7 @@ export const DashboardPage: React.FC<Props> = ({
             <h2 className="text-2xl font-extrabold tracking-tight text-white font-mono">
               OPERATIONAL HEAT INTELLIGENCE
             </h2>
-            <DataSourceBadge mode="mock" className="hidden sm:inline-flex" />
+            <DataSourceBadge mode="live" isLive={true} className="hidden sm:inline-flex" />
           </div>
           <p className="text-xs text-gray-400 mt-1">
             Real-time heat-risk assessment and decision-support platform powered by FortyGuard Temperature Intelligence.

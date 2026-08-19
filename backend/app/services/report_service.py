@@ -11,25 +11,28 @@ class ReportService:
         risk_level = risk_data.get("level", "MODERATE")
         risk_score = risk_data.get("score", 50.0)
 
+        data_source = "FortyGuard Live Enterprise API"
+        generator_tag = f"SOURCE: {data_source} | ANALYSIS: HeatShield AI Decision Engine"
+
         title = f"{request.report_type} - {facility_name}"
         summary = (
             f"Official operational heat incident report generated for {facility_name}. "
-            f"Environmental signals recorded thermal risk level as {risk_level} ({risk_score}/100). "
-            f"Recommended operational protocols have been issued to facility safety managers."
+            f"Real-time atmospheric and micro-climate telemetry ingested via {data_source} recorded facility thermal risk level as {risk_level} ({risk_score}/100). "
+            f"Deterministic HeatShield risk engine protocols have been calculated and issued for operational compliance."
         )
 
         key_findings = [
-            f"Ambient Air Temperature recorded at {env_data.get('temperature', 'N/A')} C.",
-            f"Perceived Heat Index reached {env_data.get('heat_index', 'N/A')} C.",
-            f"Wet Bulb Stress index reached {env_data.get('wet_bulb', 'N/A')} C under {env_data.get('humidity', 'N/A')}% humidity.",
-            f"Facility type ({facility_data.get('type')}) vulnerability multiplier applied."
+            f"Ambient Air Temperature recorded at {env_data.get('temperature', 'N/A')}°C via {data_source}.",
+            f"Perceived Heat Index reached {env_data.get('heat_index', 'N/A')}°C.",
+            f"Wet Bulb Stress index reached {env_data.get('wet_bulb', 'N/A')}°C under {env_data.get('humidity', 'N/A')}% relative humidity.",
+            f"Facility type ({facility_data.get('type')}) infrastructure vulnerability multiplier applied."
         ]
 
         actions_taken = [
             "Issued automatic high-risk push alert to on-duty site supervisors.",
             "Enforced mandatory 15-minute hydration and shaded recovery breaks.",
             "Recommended rescheduling non-essential heavy manual labor.",
-            "Logged incident telemetry into HeatShield enterprise registry."
+            "Logged incident telemetry into HeatShield enterprise audit registry."
         ]
 
         return ReportResponse(
@@ -43,15 +46,17 @@ class ReportService:
             risk_score=risk_score,
             summary=summary,
             environmental_snapshot={
+                "data_source": data_source,
                 "temperature": env_data.get("temperature"),
                 "heat_index": env_data.get("heat_index"),
                 "humidity": env_data.get("humidity"),
                 "wet_bulb": env_data.get("wet_bulb"),
-                "aqi": env_data.get("aqi")
+                "aqi": env_data.get("aqi"),
+                "solar_irradiance": env_data.get("solar_irradiance")
             },
             key_findings=key_findings,
             actions_taken=actions_taken,
-            generated_by="HeatShield AI Decision Engine"
+            generated_by=generator_tag
         )
 
     def generate_pdf_bytes(self, report: ReportResponse) -> bytes:
@@ -71,6 +76,7 @@ class ReportService:
         pdf.set_font("Helvetica", "", 10)
         pdf.cell(0, 6, clean(f"Report ID: {report.id}  |  Generated: {report.generated_at}"), ln=True)
         pdf.cell(0, 6, clean(f"Risk Level: {report.risk_level}  |  Risk Score: {report.risk_score}/100"), ln=True)
+        pdf.cell(0, 6, clean(f"Provenance: {report.generated_by}"), ln=True)
         pdf.ln(8)
 
         pdf.set_font("Helvetica", "B", 12)

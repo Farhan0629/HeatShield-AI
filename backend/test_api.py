@@ -1,4 +1,9 @@
+import os
+os.environ["FORTYGUARD_MODE"] = "mock"
+
 from fastapi.testclient import TestClient
+from app.config import settings
+settings.FORTYGUARD_MODE = "mock"
 from app.main import app
 
 client = TestClient(app)
