@@ -43,6 +43,8 @@ export function App() {
   const [isReportLoading, setIsReportLoading] = useState(false);
 
   const [isBackendOffline, setIsBackendOffline] = useState(false);
+  const [isTelemetryLoading, setIsTelemetryLoading] = useState(false);
+  const [telemetryError, setTelemetryError] = useState<string | null>(null);
 
   const fetchInitialData = useCallback(async () => {
     setIsBackendOffline(false);
@@ -70,6 +72,8 @@ export function App() {
   }, [selectedFacilityId]);
 
   const fetchFacilityTelemetry = useCallback(async (facilityId: string) => {
+    setIsTelemetryLoading(true);
+    setTelemetryError(null);
     try {
       const [envMetrics, riskData, heatForecast, heatmapData] = await Promise.all([
         apiService.getCurrentConditions(facilityId),
@@ -91,11 +95,14 @@ export function App() {
         current_temperature: envMetrics.temperature
       } : f));
 
+      setIsTelemetryLoading(false);
     } catch (err: any) {
+      setIsTelemetryLoading(false);
       if (err instanceof BackendUnavailableError || err.name === 'BackendUnavailableError') {
         setIsBackendOffline(true);
       } else {
         console.error(`Failed to load telemetry for facility ${facilityId}:`, err);
+        setTelemetryError(err?.message || `FortyGuard Live API communication error for ${facilityId}`);
       }
     }
   }, []);
@@ -148,7 +155,7 @@ export function App() {
       } else {
         setChatMessages(prev => [...prev, {
           role: 'assistant',
-          content: 'Sorry, I ran into an issue retrieving telemetry to process your query.',
+          content: 'Sorry, I ran into an issue communicating with Google Gemini AI.',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }]);
       }
@@ -219,6 +226,9 @@ export function App() {
           metrics={metrics}
           assessment={assessment}
           forecast={forecast}
+          isLoading={isTelemetryLoading}
+          error={telemetryError}
+          onRetry={() => fetchFacilityTelemetry(selectedFacilityId)}
           onSelectFacility={setSelectedFacilityId}
           onNavigate={setActiveTab}
         />
@@ -244,6 +254,9 @@ export function App() {
           assessment={assessment}
           forecast={forecast}
           alerts={alerts}
+          isLoading={isTelemetryLoading}
+          error={telemetryError}
+          onRetry={() => fetchFacilityTelemetry(selectedFacilityId)}
           onNavigate={setActiveTab}
         />
       )}
@@ -252,12 +265,19 @@ export function App() {
         <ThermalMapPage
           facility={selectedFacility}
           heatmap={heatmap}
+          isLoading={isTelemetryLoading}
+          error={telemetryError}
+          onRetry={() => fetchFacilityTelemetry(selectedFacilityId)}
         />
       )}
 
       {activeTab === 'risk' && (
         <RiskAnalysisPage
           assessment={assessment}
+          facilityName={selectedFacility?.name}
+          isLoading={isTelemetryLoading}
+          error={telemetryError}
+          onRetry={() => fetchFacilityTelemetry(selectedFacilityId)}
         />
       )}
 

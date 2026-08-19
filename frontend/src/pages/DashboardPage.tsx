@@ -8,6 +8,7 @@ import { EnvironmentalMetricsGrid } from '../components/dashboard/EnvironmentalM
 import { RiskTrendChart } from '../components/dashboard/RiskTrendChart';
 import { FacilityStatusTable } from '../components/dashboard/FacilityStatusTable';
 import { DataSourceBadge } from '../components/common/DataSourceBadge';
+import { TelemetryLoadingBuffer } from '../components/common/TelemetryLoadingBuffer';
 import type { Facility } from '../types/facility';
 import type { EnvironmentalMetrics, HeatForecastResponse } from '../types/heat';
 import type { RiskAssessment } from '../types/risk';
@@ -18,6 +19,9 @@ interface Props {
   metrics: EnvironmentalMetrics | null;
   assessment: RiskAssessment | null;
   forecast: HeatForecastResponse | null;
+  isLoading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
   onSelectFacility: (id: string) => void;
   onNavigate: (tab: string) => void;
 }
@@ -28,6 +32,9 @@ export const DashboardPage: React.FC<Props> = ({
   metrics,
   assessment,
   forecast,
+  isLoading = false,
+  error = null,
+  onRetry,
   onSelectFacility,
   onNavigate
 }) => {
@@ -76,60 +83,69 @@ export const DashboardPage: React.FC<Props> = ({
         }}
       />
 
-      {/* 2. Top Grid: Overall Risk Card + 12h Forecast Trend */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-5">
-          <OverallRiskCard
+      {/* Loading or Error Buffer */}
+      {isLoading ? (
+        <TelemetryLoadingBuffer facilityName={facilityName} />
+      ) : error ? (
+        <TelemetryLoadingBuffer facilityName={facilityName} isError={true} errorMessage={error} onRetry={onRetry} />
+      ) : (
+        <>
+          {/* 2. Top Grid: Overall Risk Card + 12h Forecast Trend */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div className="lg:col-span-5">
+              <OverallRiskCard
+                assessment={assessment}
+                facilityName={facilityName}
+              />
+            </div>
+
+            <div className="lg:col-span-7">
+              <RiskTrendChart forecast={forecast} />
+            </div>
+          </div>
+
+          {/* 3. Why This Risk? Root-Cause Intelligence */}
+          <WhyThisRisk
             assessment={assessment}
             facilityName={facilityName}
           />
-        </div>
 
-        <div className="lg:col-span-7">
-          <RiskTrendChart forecast={forecast} />
-        </div>
-      </div>
+          {/* 4. Actionable Prioritized Recommendations */}
+          <ActionRecommendationsCard
+            recommendations={assessment?.structured_recommendations || []}
+            facilityName={facilityName}
+          />
 
-      {/* 3. Why This Risk? Root-Cause Intelligence */}
-      <WhyThisRisk
-        assessment={assessment}
-        facilityName={facilityName}
-      />
+          {/* 5. Operational Impact Matrix */}
+          <OperationalImpactMatrix
+            impact={assessment?.operational_impact}
+          />
 
-      {/* 4. Actionable Prioritized Recommendations */}
-      <ActionRecommendationsCard
-        recommendations={assessment?.structured_recommendations || []}
-        facilityName={facilityName}
-      />
+          {/* 6. Supporting Environmental Telemetry */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-mono uppercase tracking-widest text-gray-400">
+                FortyGuard Atmospheric & Micro-Climate Telemetry
+              </h3>
+              <span className="text-[11px] font-mono text-gray-500">
+                High-Resolution Street-Level Ingestion
+              </span>
+            </div>
+            <EnvironmentalMetricsGrid metrics={metrics} />
+          </div>
 
-      {/* 5. Operational Impact Matrix */}
-      <OperationalImpactMatrix
-        impact={assessment?.operational_impact}
-      />
-
-      {/* 6. Supporting Environmental Telemetry */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xs font-mono uppercase tracking-widest text-gray-400">
-            FortyGuard Atmospheric & Micro-Climate Telemetry
-          </h3>
-          <span className="text-[11px] font-mono text-gray-500">
-            High-Resolution Street-Level Ingestion
-          </span>
-        </div>
-        <EnvironmentalMetricsGrid metrics={metrics} />
-      </div>
-
-      {/* 7. Enterprise Facility Inventory Table */}
-      <FacilityStatusTable
-        facilities={facilities}
-        selectedFacilityId={selectedFacility?.id || 'f1'}
-        onSelectFacility={onSelectFacility}
-        onNavigateDetails={(id) => {
-          onSelectFacility(id);
-          onNavigate('details');
-        }}
-      />
+          {/* 7. Enterprise Facility Inventory Table */}
+          <FacilityStatusTable
+            facilities={facilities}
+            selectedFacilityId={selectedFacility?.id || 'f1'}
+            onSelectFacility={onSelectFacility}
+            onNavigateDetails={(id) => {
+              onSelectFacility(id);
+              onNavigate('details');
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };

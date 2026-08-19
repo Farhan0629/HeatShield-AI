@@ -12,6 +12,7 @@ import { ActionRecommendationsCard } from '../components/risk/ActionRecommendati
 import { OperationalImpactMatrix } from '../components/risk/OperationalImpactMatrix';
 import { EnvironmentalMetricsGrid } from '../components/dashboard/EnvironmentalMetricsGrid';
 import { RiskTrendChart } from '../components/dashboard/RiskTrendChart';
+import { TelemetryLoadingBuffer } from '../components/common/TelemetryLoadingBuffer';
 
 interface Props {
   facility: Facility | null;
@@ -19,6 +20,9 @@ interface Props {
   assessment: RiskAssessment | null;
   forecast: HeatForecastResponse | null;
   alerts: Alert[];
+  isLoading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
   onNavigate: (tab: string) => void;
 }
 
@@ -28,9 +32,14 @@ export const FacilityDetailsPage: React.FC<Props> = ({
   assessment,
   forecast,
   alerts,
+  isLoading = false,
+  error = null,
+  onRetry,
   onNavigate
 }) => {
   if (!facility) return null;
+  if (isLoading) return <TelemetryLoadingBuffer facilityName={facility.name} />;
+  if (error) return <TelemetryLoadingBuffer facilityName={facility.name} isError={true} errorMessage={error} onRetry={onRetry} />;
 
   const facilityAlerts = alerts.filter(a => a.facility_id === facility.id);
 

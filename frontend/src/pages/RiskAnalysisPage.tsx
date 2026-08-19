@@ -4,13 +4,24 @@ import { RiskEngineExplainer } from '../components/risk/RiskEngineExplainer';
 import { WhyThisRisk } from '../components/risk/WhyThisRisk';
 import { OperationalImpactMatrix } from '../components/risk/OperationalImpactMatrix';
 import { DataSourceBadge } from '../components/common/DataSourceBadge';
+import { TelemetryLoadingBuffer } from '../components/common/TelemetryLoadingBuffer';
 import type { RiskAssessment } from '../types/risk';
 
 interface Props {
   assessment: RiskAssessment | null;
+  facilityName?: string;
+  isLoading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
 }
 
-export const RiskAnalysisPage: React.FC<Props> = ({ assessment }) => {
+export const RiskAnalysisPage: React.FC<Props> = ({
+  assessment,
+  facilityName = 'Active Monitored Facility',
+  isLoading = false,
+  error = null,
+  onRetry
+}) => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -27,11 +38,17 @@ export const RiskAnalysisPage: React.FC<Props> = ({ assessment }) => {
         </div>
       </div>
 
-      {/* Why This Risk Root-Cause Intelligence */}
-      <WhyThisRisk
-        assessment={assessment}
-        facilityName="Active Monitored Facility"
-      />
+      {isLoading ? (
+        <TelemetryLoadingBuffer facilityName={facilityName} />
+      ) : error ? (
+        <TelemetryLoadingBuffer facilityName={facilityName} isError={true} errorMessage={error} onRetry={onRetry} />
+      ) : (
+        <>
+          {/* Why This Risk Root-Cause Intelligence */}
+          <WhyThisRisk
+            assessment={assessment}
+            facilityName={facilityName}
+          />
 
       {/* Operational Impact Propagation */}
       <OperationalImpactMatrix
@@ -47,6 +64,8 @@ export const RiskAnalysisPage: React.FC<Props> = ({ assessment }) => {
           <RiskEngineExplainer />
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };

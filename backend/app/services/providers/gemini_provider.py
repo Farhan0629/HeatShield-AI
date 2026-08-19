@@ -54,29 +54,41 @@ class GeminiAIProvider(AIProvider):
             f"- Thermal Threshold Exceedance: {threshold_hours} continuous hours\n"
             f"- Operating Schedule: {operating_hours}\n\n"
             "INSTRUCTIONS:\n"
-            "1. Answer concisely, professionally, and directly in markdown format.\n"
+            "1. Answer concisely, professionally, and directly in clean markdown format.\n"
             "2. Base all calculations and reasoning strictly on the live FortyGuard metrics provided above.\n"
-            "3. Format recommendations with Priority tags ([P1 - Immediate], [P2 - High], [P3 - Standard]), Action, Reason, and Expected Benefit.\n"
+            "3. When operational precautions are warranted, format recommendations with Priority tags ([P1 - Immediate], [P2 - High], [P3 - Standard]), Action, Reason, and Expected Benefit.\n"
             "4. Remind that recommendations represent operational safety precautions and facility engineering protocols."
         )
 
-        full_prompt = f"{system_prompt}\n\nUser Inquiry: {request.message}"
+        # Build multi-turn contents array
+        contents = []
+        if request.history:
+            for msg in request.history[-6:]:  # Keep last 6 messages for context
+                role = "user" if msg.role == "user" else "model"
+                if msg.content and msg.content.strip():
+                    contents.append({
+                        "role": role,
+                        "parts": [{"text": msg.content.strip()}]
+                    })
+
+        # Append current user query
+        contents.append({
+            "role": "user",
+            "parts": [{"text": request.message.strip()}]
+        })
 
         payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {"text": full_prompt}
-                    ]
-                }
-            ],
+            "system_instruction": {
+                "parts": [{"text": system_prompt}]
+            },
+            "contents": contents,
             "generationConfig": {
                 "temperature": 0.3,
                 "maxOutputTokens": 800
             }
         }
 
-        async with httpx.AsyncClient(timeout=20.0) as client:
+        async with httpx.AsyncClient(timeout=25.0) as client:
             for model_name in self.candidate_models:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent"
                 headers = {
@@ -94,7 +106,7 @@ class GeminiAIProvider(AIProvider):
                             if parts:
                                 reply_text = parts[0].get("text", "").strip()
                                 if reply_text:
-                                    logger.info(f"[Gemini] Successfully generated decision response via {model_name}")
+                                    logger.info(f"[Gemini] Successfully generated multi-turn response via {model_name}")
                                     return AIChatResponse(
                                         reply=reply_text,
                                         facility_id=request.facility_id,

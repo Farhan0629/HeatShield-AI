@@ -40,12 +40,12 @@ def test_live_suite():
         print(f"   - [{f['id']}] {f['name']} ({f['location']}): ({f['latitude']}, {f['longitude']})")
     assert len(facilities) == 4
 
-    # Select Dallas (f2)
-    dallas_id = "f2"
+    # Select Amazon DFW7 (f1)
+    target_id = "f1"
 
     # 3. Live Environmental Conditions (POST /v1/env_params -> GET /v1/status/{id})
-    print(f"\n3. Testing Live Current Conditions for Dallas ({dallas_id})...")
-    res_curr = client.get(f"/api/heat/current/{dallas_id}")
+    print(f"\n3. Testing Live Current Conditions for Amazon DFW7 ({target_id})...")
+    res_curr = client.get(f"/api/heat/current/{target_id}")
     print(f"   Status: {res_curr.status_code}")
     curr_data = res_curr.json()
     print(f"   Air Temp: {curr_data.get('temperature')}°C")
@@ -59,8 +59,8 @@ def test_live_suite():
     assert curr_data.get("is_demo_data") is False
 
     # 4. Live-Grounded 12-Hour Forecast
-    print(f"\n4. Testing Live Forecast for Dallas ({dallas_id})...")
-    res_fc = client.get(f"/api/heat/forecast/{dallas_id}?hours=12")
+    print(f"\n4. Testing Live Forecast for Amazon DFW7 ({target_id})...")
+    res_fc = client.get(f"/api/heat/forecast/{target_id}?hours=12")
     fc_data = res_fc.json()
     print(f"   Hourly Points: {len(fc_data.get('hourly', []))}")
     print(f"   Peak Time: {fc_data.get('peak_time')}")
@@ -69,8 +69,8 @@ def test_live_suite():
     assert len(fc_data.get("hourly", [])) == 12
 
     # 5. Live Satellite Micro-Climate Heatmap (POST /v1/heatmap -> GET /v1/status/{id})
-    print(f"\n5. Testing Live Heatmap for Dallas ({dallas_id})...")
-    res_hm = client.get(f"/api/heat/heatmap/{dallas_id}")
+    print(f"\n5. Testing Live Heatmap for Amazon DFW7 ({target_id})...")
+    res_hm = client.get(f"/api/heat/heatmap/{target_id}")
     hm_data = res_hm.json()
     features = hm_data.get("features", [])
     print(f"   Heatmap Features: {len(features)} tiles")
@@ -82,8 +82,8 @@ def test_live_suite():
     assert hm_data.get("is_demo_data") is False
 
     # 6. Deterministic Risk Engine on Live FortyGuard Telemetry
-    print(f"\n6. Testing Risk Engine on Live Dallas Telemetry...")
-    res_risk = client.get(f"/api/risk/{dallas_id}")
+    print(f"\n6. Testing Risk Engine on Live Amazon DFW7 Telemetry...")
+    res_risk = client.get(f"/api/risk/{target_id}")
     risk_data = res_risk.json()
     print(f"   Risk Score: {risk_data.get('score')} / 100")
     print(f"   Risk Level: {risk_data.get('level')}")
@@ -95,9 +95,9 @@ def test_live_suite():
     assert risk_data.get("is_demo_data") is False
 
     # 7. AI Decision Assistant with Live Facility Context
-    print(f"\n7. Testing AI Decision Assistant with Live Dallas Context...")
+    print(f"\n7. Testing AI Decision Assistant with Live Amazon DFW7 Context...")
     res_ai = client.post("/api/ai/chat", json={
-        "facility_id": dallas_id,
+        "facility_id": target_id,
         "message": "What is the primary operational heat risk right now?"
     })
     ai_data = res_ai.json()
@@ -107,7 +107,7 @@ def test_live_suite():
     # 8. Reports Generation with Live FortyGuard Provenance
     print(f"\n8. Testing Executive Reports with Live FortyGuard Telemetry...")
     res_rep = client.post("/api/reports/generate", json={
-        "facility_id": dallas_id,
+        "facility_id": target_id,
         "report_type": "Incident Report"
     })
     rep_data = res_rep.json()
@@ -119,7 +119,7 @@ def test_live_suite():
 
     # 9. PDF Report Generation
     res_pdf = client.post("/api/reports/pdf", json={
-        "facility_id": dallas_id,
+        "facility_id": target_id,
         "report_type": "Incident Report"
     })
     print(f"   PDF Export Size: {len(res_pdf.content)} bytes")

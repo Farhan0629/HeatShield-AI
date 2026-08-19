@@ -1,14 +1,18 @@
 import React from 'react';
 import { ThermalMapComponent } from '../components/map/ThermalMapComponent';
+import { TelemetryLoadingBuffer } from '../components/common/TelemetryLoadingBuffer';
 import type { Facility } from '../types/facility';
 import type { HeatmapGeoJSONResponse } from '../types/heat';
 
 interface Props {
   facility: Facility | null;
   heatmap: HeatmapGeoJSONResponse | null;
+  isLoading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
 }
 
-export const ThermalMapPage: React.FC<Props> = ({ facility, heatmap }) => {
+export const ThermalMapPage: React.FC<Props> = ({ facility, heatmap, isLoading = false, error = null, onRetry }) => {
   return (
     <div className="space-y-6">
       <div>
@@ -20,7 +24,13 @@ export const ThermalMapPage: React.FC<Props> = ({ facility, heatmap }) => {
         </p>
       </div>
 
-      <ThermalMapComponent facility={facility} heatmap={heatmap} />
+      {isLoading ? (
+        <TelemetryLoadingBuffer facilityName={facility?.name} />
+      ) : error ? (
+        <TelemetryLoadingBuffer facilityName={facility?.name} isError={true} errorMessage={error} onRetry={onRetry} />
+      ) : (
+        <ThermalMapComponent facility={facility} heatmap={heatmap} />
+      )}
     </div>
   );
 };

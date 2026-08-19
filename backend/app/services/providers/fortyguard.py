@@ -190,11 +190,16 @@ class FortyGuardProvider(TemperatureDataProvider):
         if cached:
             return cached
 
+        # Look up geographic baseline temperature if available
+        from app.models.in_memory_db import db
+        facility = db.get_facility(facility_id)
+        base_temp = facility.current_temperature if facility else 38.0
+
         # FortyGuard atmospheric modeling coverage: query indexed peak summer timestamp for high-res telemetry
         payload = {
             "latitude": round(lat, 4),
             "longitude": round(lng, 4),
-            "temperature": 38.0,  # Ambient temperature query baseline
+            "temperature": round(base_temp, 1),
             "date_time": {
                 "start_date": "2024-07-15",
                 "filter_type": 1,
