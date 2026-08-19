@@ -10,8 +10,9 @@ class Settings(BaseSettings):
     FORTYGUARD_POLL_TIMEOUT_SECONDS: int = 120
     FORTYGUARD_CACHE_TTL_SECONDS: int = 300  # 5 min cache
     
-    AI_PROVIDER: str = "live"
+    AI_PROVIDER: str = "gemini"
     AI_API_KEY: str = ""
+    GEMINI_API_KEY: str = ""
     
     HOST: str = "0.0.0.0"
     PORT: int = 8000

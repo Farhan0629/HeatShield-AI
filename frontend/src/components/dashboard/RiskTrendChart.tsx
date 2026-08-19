@@ -63,8 +63,11 @@ export const RiskTrendChart: React.FC<Props> = ({ forecast }) => {
       </div>
 
       <div className="mt-3 flex items-center justify-between text-xs text-gray-400 font-mono">
-        <span>Simulated 12h FortyGuard Forecast</span>
-        <span className="text-amber-400 font-sans text-[11px]">Recommended Break Shift: 13:30 - 15:30 IST</span>
+        <span className="flex items-center gap-1.5 text-emerald-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          FortyGuard Real-Time 12h Thermal Forecast
+        </span>
+        <span className="text-amber-400 font-sans text-[11px]">Recommended Break Window: {forecast?.peak_time || '13:30'} – 16:30</span>
       </div>
     </div>
   );

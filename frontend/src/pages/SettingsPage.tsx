@@ -72,8 +72,9 @@ export const SettingsPage: React.FC<Props> = ({ health: _health }) => {
           <div className="space-y-3 text-xs">
             <div className="flex items-center justify-between p-3 rounded-xl bg-surface-muted border border-gray-800">
               <span className="text-gray-400 font-mono">Active Decision Engine</span>
-              <span className="font-mono font-bold text-purple-300 px-2.5 py-0.5 rounded bg-purple-950 border border-purple-800">
-                FortyGuard Live Decision Engine
+              <span className="font-mono font-bold text-purple-300 px-2.5 py-0.5 rounded bg-purple-950 border border-purple-800 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                Google Gemini Live API
               </span>
             </div>
 

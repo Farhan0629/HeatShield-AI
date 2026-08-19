@@ -72,7 +72,7 @@ export const ChatWindow: React.FC<Props> = ({
         </div>
 
         <div className="text-right text-[11px] font-mono text-gray-400 hidden sm:block">
-          <span>Decision Engine: <strong className="text-emerald-400">FortyGuard Live Intelligence</strong></span>
+          <span>AI Intelligence: <strong className="text-purple-300">Google Gemini Live</strong> • <strong className="text-emerald-400">FortyGuard Live</strong></span>
         </div>
       </div>
 
