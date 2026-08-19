@@ -7,7 +7,7 @@
 
 [![FortyGuard Hackathon '26](https://img.shields.io/badge/FortyGuard_Hackathon-'26-orange?style=for-the-badge&logo=fire)](https://docs-api.fortyguard.com/docs/introduction)
 [![Build Status](https://img.shields.io/badge/Build-Passing-emerald?style=for-the-badge&logo=githubactions)](https://github.com/Farhan0629/HeatShield-AI)
-[![FortyGuard API](https://img.shields.io/badge/FortyGuard_API-MOCK_%7C_LIVE-indigo?style=for-the-badge&logo=fastapi)](https://docs-api.fortyguard.com/docs/introduction)
+[![FortyGuard API](https://img.shields.io/badge/FortyGuard_API-100%25_LIVE_VERIFIED-emerald?style=for-the-badge&logo=fastapi)](https://docs-api.fortyguard.com/docs/introduction)
 [![Architecture](https://img.shields.io/badge/Architecture-React_18_%7C_FastAPI_%7C_Vite-blue?style=for-the-badge)](https://github.com/Farhan0629/HeatShield-AI)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
 
