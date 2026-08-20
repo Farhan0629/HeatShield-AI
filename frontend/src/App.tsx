@@ -265,6 +265,9 @@ export function App() {
         <ThermalMapPage
           facility={selectedFacility}
           heatmap={heatmap}
+          metrics={metrics}
+          forecast={forecast}
+          assessment={assessment}
           isLoading={isTelemetryLoading}
           error={telemetryError}
           onRetry={() => fetchFacilityTelemetry(selectedFacilityId)}
